@@ -14,13 +14,14 @@ import org.springframework.data.solr.core.query.HighlightQuery;
 import org.springframework.data.solr.core.query.Query;
 import org.springframework.data.solr.core.query.SimpleHighlightQuery;
 import org.springframework.data.solr.core.query.SimpleQuery;
+import org.springframework.data.solr.core.query.result.GroupPage;
 import org.springframework.data.solr.core.query.result.HighlightEntry;
 import org.springframework.data.solr.core.query.result.HighlightPage;
-import org.springframework.data.solr.core.query.result.ScoredPage;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
+
 
 @Service(timeout=5000)
 public class ItemSearchServiceImpl implements ItemSearchService{
@@ -59,5 +60,12 @@ public class ItemSearchServiceImpl implements ItemSearchService{
 		}
 		map.put("rows", page.getContent());
 		return map;
+	}
+	
+	private List searchCategoryList(Map searchMap) {
+		Map map = new HashMap();
+		Query query=new SimpleQuery();
+		GroupPage<TbItem> page = solrTemplate.queryForGroupPage(query, TbItem.class);
+		return null;
 	}
 }
