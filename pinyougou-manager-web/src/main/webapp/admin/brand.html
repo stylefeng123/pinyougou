@@ -14,98 +14,16 @@
 <link rel="stylesheet" href="../css/style.css">
 <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
 <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+
 <script src="../plugins/angularjs/angular.min.js"></script>
 <!-- 分页组件开始 -->
 <script src="../plugins/angularjs/pagination.js"></script>
 <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
 <!-- 分页组件结束 -->
-
-<script type="text/javascript">
-	var app = angular.module('pinyougou', [ 'pagination' ]);
-	app.controller('brandController', function($scope, $http) {
-		$scope.findAll = function() {
-			$http.get('../brand/findAll.do').success(function(data) {
-				$scope.list = data;
-			});
-		}
-
-		$scope.findPage = function(page, size) {
-			$http
-					.get(
-							'../brand/findPage.do?page=' + page + '&pageSize='
-									+ size).success(function(data) {
-						$scope.list = data.rows;
-						$scope.paginationConf.totalItems = data.total;
-					});
-		}
-		$scope.reloadList = function() {
-			//切换页码  
-			$scope.search($scope.paginationConf.currentPage,
-					$scope.paginationConf.itemsPerPage);
-		}
-		//分页控件配置 
-		$scope.paginationConf = {
-			currentPage : 1,
-			totalItems : 10,
-			itemsPerPage : 10,
-			perPageOptions : [ 10, 20, 30, 40, 50 ],
-			onChange : function() {
-				$scope.reloadList();//重新加载
-			}
-		};
-
-		$scope.save = function() {
-			var methodName = 'save';
-			if ($scope.entity.id != null) {
-				methodName = 'update';
-			}
-			$http.post('../brand/' + methodName + '.do', $scope.entity)
-					.success(function(data) {
-						if (data.success) {
-							$scope.reloadList();
-						} else {
-							alert(data.message);
-						}
-					});
-
-		}
-
-		$scope.findOne = function(id) {
-			$http.get('../brand/findById.do?id=' + id).success(function(data) {
-				$scope.entity = data;
-			});
-		}
-
-		$scope.selectIds = [];
-
-		$scope.updateSelection = function($event, id) {
-			if ($event.target.checked) {
-				$scope.selectIds.push(id);
-			} else {
-				$scope.selectIds.splice($scope.selectIds.indexOf(id), 1);
-			}
-		}
-		
-		$scope.del=function(){
-			$http.post('../brand/del.do',$scope.selectIds).success(function(data){
-				if(data.success){
-					$scope.reloadList();
-				}else{
-					alert(data.message);
-				}
-			});
-		}
-		$scope.searchEntity={};
-		$scope.search=function(page, size){
-			$http.post(
-					'../brand/search.do?page=' + page + '&pageSize='+ size,$scope.searchEntity)
-					.success(function(data) {
-				$scope.list = data.rows;
-				$scope.paginationConf.totalItems = data.total;
-			});
-		}
-	});
-</script>
+<script src="../js/base_pagination.js"></script>
+<script src="../js/controller/baseController.js"></script>
+<script src="../js/controller/brandController.js"></script>
+<script src="../js/service/brandService.js"></script>
 </head>
 <body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou"
 	ng-controller="brandController">
@@ -129,7 +47,8 @@
 							data-toggle="modal" data-target="#editModal" ng-click="entity={}">
 							<i class="fa fa-file-o"></i> 新建
 						</button>
-						<button type="button" class="btn btn-default" title="删除" ng-click="del()">
+						<button type="button" class="btn btn-default" title="删除"
+							ng-click="del()">
 							<i class="fa fa-trash-o"></i> 删除
 						</button>
 						<button type="button" class="btn btn-default" title="刷新"
@@ -141,8 +60,8 @@
 			</div>
 			<div class="box-tools pull-right">
 				<div class="has-feedback"></div>
-				品牌名称:<input ng-model="searchEntity.name"> 
-				品牌首字母:<input ng-model="searchEntity.firstChar">
+				品牌名称:<input ng-model="searchEntity.name"> 品牌首字母:<input
+					ng-model="searchEntity.firstChar">
 				<button class="btn btn-default" ng-click="reloadList()">查询</button>
 			</div>
 			<!--工具栏/-->
@@ -219,6 +138,5 @@
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>
