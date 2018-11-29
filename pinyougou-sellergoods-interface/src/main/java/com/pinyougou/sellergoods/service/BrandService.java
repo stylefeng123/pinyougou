@@ -1,24 +1,26 @@
 package com.pinyougou.sellergoods.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.pinyougou.pojo.TbBrand;
 
 import entity.PageResult;
 
 public interface BrandService {
+	
+	
 	List<TbBrand> findAll();
 	
-	PageResult findPage(int pageNum,int pageSize);
-	
-	PageResult findPage(TbBrand tbBrand, Integer page, Integer pageSize);
+	PageResult findByPage(TbBrand brand, int pageNum, int pageSize);
 	
 	void save(TbBrand tbBrand) throws Exception;
 
-	TbBrand findById(Integer id);
+	TbBrand findById(Long id) ;
 
 	void update(TbBrand brand) throws Exception;
 
 	void delete(Long [] ids) throws Exception;
 
-	
+	List<Map> selectOptionList();
 }

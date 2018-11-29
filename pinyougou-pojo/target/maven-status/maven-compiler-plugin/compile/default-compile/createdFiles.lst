@@ -1,6 +1,7 @@
 com\pinyougou\pojo\TbContentCategoryExample$GeneratedCriteria.class
 com\pinyougou\pojo\TbItemCatExample.class
 com\pinyougou\pojo\TbItemExample$Criterion.class
+entity\Result.class
 com\pinyougou\pojo\TbContentCategoryExample.class
 com\pinyougou\pojo\TbTypeTemplate.class
 com\pinyougou\pojo\TbBrand.class
@@ -33,11 +34,13 @@ com\pinyougou\pojo\TbSpecificationExample$GeneratedCriteria.class
 com\pinyougou\pojo\TbItemCatExample$GeneratedCriteria.class
 com\pinyougou\pojo\TbGoodsExample$Criteria.class
 com\pinyougou\pojo\TbPayLogExample$GeneratedCriteria.class
+com\pinyougou\pojogroup\Specification.class
 com\pinyougou\pojo\TbGoodsDescExample.class
 com\pinyougou\pojo\TbOrderExample$Criterion.class
 com\pinyougou\pojo\TbContentCategoryExample$Criterion.class
 com\pinyougou\pojo\TbSellerExample$Criteria.class
 com\pinyougou\pojo\TbGoodsExample.class
+com\pinyougou\pojogroup\Goods.class
 com\pinyougou\pojo\TbPayLogExample$Criterion.class
 com\pinyougou\pojo\TbItemCatExample$Criteria.class
 com\pinyougou\pojo\TbTypeTemplateExample.class

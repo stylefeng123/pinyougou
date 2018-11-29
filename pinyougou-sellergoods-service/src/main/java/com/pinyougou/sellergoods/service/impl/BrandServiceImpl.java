@@ -1,6 +1,7 @@
 package com.pinyougou.sellergoods.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,91 +16,72 @@ import com.pinyougou.pojo.TbBrandExample.Criteria;
 import com.pinyougou.sellergoods.service.BrandService;
 
 import entity.PageResult;
-
 @Service
 @Transactional
-public class BrandServiceImpl implements BrandService {
-
+public class BrandServiceImpl implements BrandService{
+	
+	// 注入DAO:
 	@Autowired
 	private TbBrandMapper brandMapper;
 	
 	@Override
 	public List<TbBrand> findAll() {
-		// TODO 自动生成的方法存根
-		List<TbBrand> list =brandMapper.selectByExample(null);
-		return list;
+		// 查询所有
+		return brandMapper.selectByExample(null);
+	}
+
+
+	@Override
+	// 保存品牌的方法
+	public void save(TbBrand brand) {
+		brandMapper.insert(brand);
 	}
 
 	@Override
-	public PageResult findPage(int pageNum, int pageSize) {
-		PageHelper.startPage(pageNum,pageSize);
-		Page<TbBrand> pages = (Page<TbBrand>) brandMapper.selectByExample(null);
-		// TODO 自动生成的方法存根
-		return new PageResult(pages.getTotal(), pages.getResult());
+	// 查询一个
+	public TbBrand findById(Long id) {
+		return brandMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
-	public void save(TbBrand tbBrand) throws Exception {
-		// TODO 自动生成的方法存根
-		List<TbBrand> list =brandMapper.selectByExample(null);
-		for (TbBrand tbBrands : list) {
-			if(tbBrand.getName().equals(tbBrands.getName())) {
-				throw new Exception("品牌名称重复");
-			}
-		}
-		brandMapper.insert(tbBrand);
-		
-	}
-
-	@Override
-	public TbBrand findById(Integer id) {
-		// TODO 自动生成的方法存根
-		long ids =id;
-		TbBrand tbBrand = brandMapper.selectByPrimaryKey(ids);
-		return tbBrand;
-	}
-
-	@Override
-	public void update(TbBrand brand) throws Exception {
-		// TODO 自动生成的方法存根
-		List<TbBrand> list =brandMapper.selectByExample(null);
-		for (TbBrand tbBrands : list) {
-			if(brand.getName().equals(tbBrands.getName())) {
-				throw new Exception("品牌名称重复");
-			}
-		}
+	// 修改品牌
+	public void update(TbBrand brand) {
 		brandMapper.updateByPrimaryKey(brand);
-		
 	}
 
 	@Override
-	public void delete(Long [] ids) throws Exception {
-		// TODO 自动生成的方法存根
+	// 删除多条记录
+	public void delete(Long[] ids) {
 		for (Long id : ids) {
-		try {
 			brandMapper.deleteByPrimaryKey(id);
-		} catch (Exception e) {
-			// TODO 自动生成的 catch 块
-			throw new Exception();
 		}
-		}
-		
 	}
 
 	@Override
-	public PageResult findPage(TbBrand tbBrand, Integer page, Integer pageSize) {
-		PageHelper.startPage(page,pageSize);
+	// 条件查询带分页
+	public PageResult findByPage(TbBrand brand, int pageNum, int pageSize) {
+		// 使用分页插件:
+		PageHelper.startPage(pageNum, pageSize);
+		// 进行条件查询:
 		TbBrandExample example = new TbBrandExample();
-		Criteria createCriteria = example.createCriteria();
-		if (tbBrand!=null) {
-			if(tbBrand.getFirstChar()!=null&&tbBrand.getFirstChar().length()>0) {
-				createCriteria.andFirstCharLike("%"+tbBrand.getFirstChar()+"%");
-			}
-			if(tbBrand.getName()!=null&&tbBrand.getName().length()>0) {
-				createCriteria.andNameLike("%"+tbBrand.getName()+"%");
-			}
+		Criteria criteria = example.createCriteria();
+		// 设置条件:
+		if(brand.getName()!=null && brand.getName().length()>0){
+			criteria.andNameLike("%"+brand.getName()+"%");
 		}
-		Page<TbBrand> list = (Page<TbBrand>) brandMapper.selectByExample(example);
-		return new PageResult(list.getTotal(),list.getResult());
+		
+		if(brand.getFirstChar()!=null && brand.getFirstChar().length() >0){
+			criteria.andFirstCharEqualTo(brand.getFirstChar());
+		}
+		
+		Page<TbBrand> page = (Page<TbBrand>) brandMapper.selectByExample(example);
+		
+		return new PageResult(page.getTotal(),page.getResult());
 	}
+
+	@Override
+	public List<Map> selectOptionList() {
+		return brandMapper.selectOptionList();
+	}
+
 }
