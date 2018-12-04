@@ -1,4 +1,6 @@
 package com.pinyougou.sellergoods.service.impl;
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +105,7 @@ public class GoodsServiceImpl implements GoodsService {
 					title+= " "+map.get(key);
 				}
 				item.setTitle(title);
-				
+				item.setStatus("1");
 				setValue(goods,item);
 				
 				itemMapper.insert(item);
@@ -204,7 +206,6 @@ public class GoodsServiceImpl implements GoodsService {
 	@Override
 	public void delete(Long[] ids) {
 		for(Long id:ids){
-//			goodsMapper.deleteByPrimaryKey(id);
 			TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
 			tbGoods.setIsDelete("1");
 			goodsMapper.updateByPrimaryKey(tbGoods);
@@ -274,6 +275,16 @@ public class GoodsServiceImpl implements GoodsService {
 				
 				goodsMapper.updateByPrimaryKey(tbGoods);
 			}
+		}
+
+		@Override
+		public List<TbItem> findItemListByGoodsIdandStatus(Long[] ids, String status) {
+			TbItemExample example =new TbItemExample();
+			com.pinyougou.pojo.TbItemExample.Criteria criteria = example.createCriteria();
+			criteria.andStatusEqualTo(status);
+			criteria.andGoodsIdIn(Arrays.asList(ids));
+			List<TbItem> itemList = itemMapper.selectByExample(example);
+			return itemList;
 		}
 	
 }

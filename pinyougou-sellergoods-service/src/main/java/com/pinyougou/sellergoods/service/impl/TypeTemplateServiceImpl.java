@@ -3,8 +3,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.pinyougou.mapper.TbSpecificationOptionMapper;
@@ -109,8 +112,25 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 		}
 		
 		Page<TbTypeTemplate> page= (Page<TbTypeTemplate>)typeTemplateMapper.selectByExample(example);		
+		saveToRedis();
 		return new PageResult(page.getTotal(), page.getResult());
 	}
+		
+		@Autowired
+		private RedisTemplate redisTemplate;
+		
+		private void saveToRedis(){
+			List<TbTypeTemplate> templates = findAll();
+			for (TbTypeTemplate tbTypeTemplate : templates) {
+				String brandIds = tbTypeTemplate.getBrandIds();
+				List<Map> brandList = JSON.parseArray(brandIds,Map.class);
+				redisTemplate.boundHashOps("brandList").put(tbTypeTemplate.getId(), brandList);
+				
+				List<Map> specList = findSpecList(tbTypeTemplate.getId());
+				redisTemplate.boundHashOps("specList").put(tbTypeTemplate.getId(), specList);
+			}
+			System.out.println("缓存品牌和规格");
+		}
 		
 		@Autowired
 		private TbSpecificationOptionMapper specificationOptionMapper ;
